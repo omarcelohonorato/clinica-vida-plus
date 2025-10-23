@@ -1,0 +1,133 @@
+# ============================================
+# SISTEMA CLÍNICA VIDA+
+# "Desenvolvimento de uma Plataforma de Saúde"
+# ============================================
+
+def menu():
+    print("\n=== SISTEMA CLÍNICA VIDA+ ===")
+    print("1. Cadastrar paciente")
+    print("2. Ver estatísticas")
+    print("3. Buscar paciente")
+    print("4. Listar todos os pacientes")
+    print("5. Sair")
+    return input("Escolha uma opção: ")
+
+
+# Lista para armazenar os pacientes
+pacientes = []
+
+
+def cadastrar_paciente():
+    """Cadastra um novo paciente na lista."""
+    print("\n--- Cadastro de Paciente ---")
+    nome = input("Nome do paciente: ").strip()
+
+    # Validação de nome
+    if not nome:
+        print("Erro: o nome não pode ficar em branco.")
+        return
+
+    try:
+        idade = int(input("Idade: "))
+        if idade <= 0:
+            print("Erro: a idade deve ser maior que zero.")
+            return
+    except ValueError:
+        print("Erro: digite uma idade válida (número inteiro).")
+        return
+
+    telefone = input("Telefone (ex: (11) 99999-9999): ").strip()
+    if not telefone:
+        print("Erro: o telefone não pode ficar em branco.")
+        return
+
+    # Cria dicionário com dados do paciente
+    paciente = {
+        "nome": nome,
+        "idade": idade,
+        "telefone": telefone
+    }
+
+    pacientes.append(paciente)
+    print(f"Paciente '{nome}' cadastrado com sucesso!")
+
+
+def ver_estatisticas():
+    """Exibe estatísticas básicas da clínica."""
+    print("\n--- Estatísticas da Clínica ---")
+
+    if not pacientes:
+        print("Nenhum paciente cadastrado.")
+        return
+
+    total = len(pacientes)
+    idades = [p["idade"] for p in pacientes]
+    media = sum(idades) / total
+    mais_novo = min(pacientes, key=lambda p: p["idade"])
+    mais_velho = max(pacientes, key=lambda p: p["idade"])
+
+    print(f"Número total de pacientes: {total}")
+    print(f"Idade média dos pacientes: {media:.1f} anos")
+    print(f"Paciente mais novo: {mais_novo['nome']} ({mais_novo['idade']} anos)")
+    print(f"Paciente mais velho: {mais_velho['nome']} ({mais_velho['idade']} anos)")
+
+
+def buscar_paciente():
+    """Busca paciente pelo nome."""
+    print("\n--- Buscar Paciente ---")
+    nome_busca = input("Digite o nome do paciente: ").strip().lower()
+
+    if not nome_busca:
+        print("Erro: digite um nome para buscar.")
+        return
+
+    encontrados = [p for p in pacientes if nome_busca in p["nome"].lower()]
+
+    if encontrados:
+        print(f"\n{len(encontrados)} paciente(s) encontrado(s):")
+        for p in encontrados:
+            print(f"- {p['nome']} | Idade: {p['idade']} | Telefone: {p['telefone']}")
+    else:
+        print("Nenhum paciente encontrado com esse nome.")
+
+
+def listar_pacientes():
+    """Lista todos os pacientes cadastrados."""
+    print("\n--- Lista de Pacientes ---")
+
+    if not pacientes:
+        print("Nenhum paciente cadastrado.")
+        return
+
+    print(f"Total de pacientes: {len(pacientes)}\n")
+    print(f"{'Nome':<25} {'Idade':<10} {'Telefone'}")
+    print("-" * 50)
+    for p in pacientes:
+        print(f"{p['nome']:<25} {p['idade']:<10} {p['telefone']}")
+    print("-" * 50)
+
+
+# ===============================
+# Programa principal
+# ===============================
+def main():
+    while True:
+        opcao = menu()
+
+        if opcao == "1":
+            cadastrar_paciente()
+        elif opcao == "2":
+            ver_estatisticas()
+        elif opcao == "3":
+            buscar_paciente()
+        elif opcao == "4":
+            listar_pacientes()
+        elif opcao == "5":
+            print("\nEncerrando o sistema... Até logo!")
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
+
+if __name__ == "__main__":
+    main()
